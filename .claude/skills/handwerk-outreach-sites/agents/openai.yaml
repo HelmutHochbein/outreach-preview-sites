@@ -1,0 +1,7 @@
+interface:
+  display_name: "Handwerk Outreach Sites"
+  short_description: "Lokale Handwerk-Websites als Muster bauen."
+  default_prompt: "Use $handwerk-outreach-sites to create a polished Muster-Website for a local German trades business."
+
+policy:
+  allow_implicit_invocation: true

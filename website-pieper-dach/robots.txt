@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://preview.minamito.de/website-pieper-dach/sitemap.xml

@@ -1,0 +1,788 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fahrdienst SSE Joachimsthal | Krankenfahrten & Fahrservice</title>
+  <meta name="description" content="Fahrdienst SSE in Joachimsthal: Krankenfahrten, Rollstuhl-, Tragestuhl- und Liegendtransport sowie sichere Fahrten zu Arzt, Klinik, Dialyse und privaten Terminen.">
+  <meta name="theme-color" content="#f7f4ed">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%23111111'/%3E%3Cpath d='M0 48h64v16H0z' fill='%23e68122'/%3E%3Ctext x='32' y='37' text-anchor='middle' font-size='19' font-family='Arial,sans-serif' font-weight='700' fill='white'%3ESSE%3C/text%3E%3C/svg%3E">
+  <link rel="preload" href="assets/fahrdienst.jpg" as="image">
+  <style>
+    :root {
+      --ink: #171717;
+      --muted: #55514a;
+      --paper: #f7f4ed;
+      --panel: #ffffff;
+      --line: #d9d2c5;
+      --black: #111111;
+      --charcoal: #252525;
+      --accent: #e68122;
+      --accent-dark: #9f4e09;
+      --accent-soft: #fff1e4;
+      --shadow: 0 20px 58px rgba(17, 17, 17, .13);
+      --radius: 8px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      font-size: 18px;
+      line-height: 1.65;
+    }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; }
+    :focus-visible {
+      outline: 4px solid rgba(230, 129, 34, .78);
+      outline-offset: 3px;
+    }
+    .skip-link {
+      position: absolute;
+      left: 14px;
+      top: -70px;
+      z-index: 20;
+      padding: 12px 16px;
+      color: white;
+      background: var(--ink);
+    }
+    .skip-link:focus { top: 14px; }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(247, 244, 237, .96);
+      border-bottom: 1px solid rgba(17, 17, 17, .16);
+      backdrop-filter: blur(14px);
+    }
+    .nav {
+      width: min(1120px, calc(100% - 32px));
+      min-height: 82px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      text-decoration: none;
+      min-width: max-content;
+    }
+    .brand-mark {
+      width: 50px;
+      height: 50px;
+      display: grid;
+      place-items: center;
+      color: white;
+      background: var(--black);
+      box-shadow: inset 0 -8px 0 var(--accent);
+      border-radius: 7px;
+      font-weight: 900;
+      letter-spacing: .02em;
+    }
+    .brand strong {
+      display: block;
+      font-size: 1.08rem;
+      line-height: 1.2;
+    }
+    .brand span {
+      display: block;
+      color: var(--muted);
+      font-size: .92rem;
+      line-height: 1.25;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      font-size: 1rem;
+    }
+    .nav-links a {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+      border-bottom: 3px solid transparent;
+    }
+    .nav-links a:hover { border-color: var(--accent); }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .icon-btn,
+    .menu-toggle {
+      width: 50px;
+      height: 50px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(17, 17, 17, .24);
+      border-radius: 7px;
+      background: white;
+      color: var(--black);
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .menu-toggle { display: none; }
+    .icon {
+      width: 23px;
+      height: 23px;
+      flex: 0 0 auto;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .btn {
+      min-height: 56px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 20px;
+      border: 2px solid transparent;
+      border-radius: 7px;
+      background: var(--accent);
+      color: white;
+      font-size: 1.05rem;
+      font-weight: 800;
+      text-decoration: none;
+      white-space: nowrap;
+      box-shadow: 0 12px 26px rgba(230, 129, 34, .26);
+    }
+    .btn.secondary {
+      background: white;
+      color: var(--ink);
+      border-color: rgba(17, 17, 17, .24);
+      box-shadow: none;
+    }
+    .btn.wide { width: 100%; }
+
+    .hero {
+      width: min(1120px, calc(100% - 32px));
+      min-height: calc(100vh - 82px);
+      margin: 0 auto;
+      padding: clamp(42px, 7vw, 86px) 0 44px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(360px, .82fr);
+      align-items: center;
+      gap: clamp(30px, 5vw, 64px);
+    }
+    .eyebrow {
+      margin: 0 0 16px;
+      color: var(--accent-dark);
+      font-size: .92rem;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    h1 {
+      max-width: 11ch;
+      margin: 0;
+      font-size: clamp(2.5rem, 5.5vw, 5.2rem);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+    .lead {
+      max-width: 720px;
+      margin: 24px 0 0;
+      color: #33302b;
+      font-size: clamp(1.18rem, 1.7vw, 1.38rem);
+      line-height: 1.58;
+    }
+    .hero-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      max-width: 650px;
+      margin-top: 30px;
+    }
+    .callout {
+      max-width: 650px;
+      margin-top: 20px;
+      padding: 18px 20px;
+      border-left: 6px solid var(--accent);
+      border-radius: var(--radius);
+      background: white;
+      box-shadow: 0 10px 30px rgba(17, 17, 17, .08);
+    }
+    .callout strong { display: block; font-size: 1.08rem; }
+    .callout p { margin: 4px 0 0; color: var(--muted); }
+    .hero-media {
+      position: relative;
+      display: grid;
+      gap: 14px;
+    }
+    .hero-image {
+      width: 100%;
+      height: min(62vh, 590px);
+      min-height: 430px;
+      object-fit: cover;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .comfort-box {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .comfort-item {
+      padding: 16px;
+      background: white;
+      border: 1px solid rgba(17, 17, 17, .12);
+      border-radius: var(--radius);
+    }
+    .comfort-item strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 1.02rem;
+    }
+    .comfort-item span {
+      display: block;
+      color: var(--muted);
+      font-size: .96rem;
+      line-height: 1.45;
+    }
+
+    section { padding: clamp(58px, 8vw, 92px) 0; }
+    .section-inner {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+    .section-heading {
+      max-width: 850px;
+      margin-bottom: 30px;
+    }
+    h2 {
+      margin: 0;
+      font-size: clamp(2rem, 3.8vw, 3.35rem);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+    .section-heading p {
+      margin: 16px 0 0;
+      color: var(--muted);
+      font-size: 1.12rem;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .service-card {
+      min-height: 100%;
+      padding: 24px;
+      background: white;
+      border: 1px solid rgba(17, 17, 17, .12);
+      border-radius: var(--radius);
+      box-shadow: 0 12px 34px rgba(17, 17, 17, .07);
+    }
+    .service-card svg {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 16px;
+      padding: 10px;
+      color: var(--accent);
+      border-radius: 8px;
+      background: var(--accent-soft);
+    }
+    .service-card h3 {
+      margin: 0 0 10px;
+      font-size: 1.28rem;
+      line-height: 1.25;
+    }
+    .service-card p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .plain-band {
+      background: #fff;
+      border-top: 1px solid rgba(17, 17, 17, .1);
+      border-bottom: 1px solid rgba(17, 17, 17, .1);
+    }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .step {
+      padding: 24px;
+      border-radius: var(--radius);
+      background: var(--paper);
+      border: 1px solid var(--line);
+    }
+    .step span {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 18px;
+      color: white;
+      background: var(--black);
+      border-radius: 50%;
+      font-weight: 900;
+    }
+    .step h3 {
+      margin: 0 0 8px;
+      font-size: 1.18rem;
+    }
+    .step p { margin: 0; color: var(--muted); }
+
+    .split {
+      display: grid;
+      grid-template-columns: minmax(0, .95fr) minmax(360px, 1.05fr);
+      gap: clamp(28px, 5vw, 64px);
+      align-items: center;
+    }
+    .photo-pair {
+      display: grid;
+      gap: 12px;
+    }
+    .photo-pair img {
+      width: 100%;
+      height: 330px;
+      object-fit: cover;
+      border-radius: var(--radius);
+      box-shadow: 0 14px 38px rgba(17, 17, 17, .12);
+    }
+    .notice-list {
+      display: grid;
+      gap: 14px;
+      margin-top: 24px;
+    }
+    .notice {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 16px;
+      background: white;
+      border: 1px solid rgba(17, 17, 17, .12);
+      border-radius: var(--radius);
+    }
+    .notice svg {
+      width: 44px;
+      height: 44px;
+      padding: 10px;
+      color: var(--accent-dark);
+      background: var(--accent-soft);
+      border-radius: 8px;
+    }
+    .notice strong { display: block; }
+    .notice p { margin: 3px 0 0; color: var(--muted); }
+
+    .contact {
+      background: var(--black);
+      color: white;
+    }
+    .contact .eyebrow { color: #ffb15c; }
+    .contact h2 { color: white; }
+    .contact-panel {
+      display: grid;
+      grid-template-columns: minmax(0, .92fr) minmax(330px, .72fr);
+      gap: 24px;
+      align-items: stretch;
+    }
+    .contact-copy {
+      padding: clamp(28px, 5vw, 54px);
+      background: var(--charcoal);
+      border: 1px solid rgba(255, 255, 255, .12);
+      border-radius: var(--radius);
+    }
+    .contact-copy p {
+      max-width: 680px;
+      margin: 16px 0 0;
+      color: rgba(255, 255, 255, .76);
+      font-size: 1.14rem;
+    }
+    .contact-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      max-width: 680px;
+      margin-top: 28px;
+    }
+    .contact-card {
+      display: grid;
+      gap: 18px;
+      padding: 28px;
+      color: var(--ink);
+      background: white;
+      border-radius: var(--radius);
+    }
+    .contact-line {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+    .contact-line svg { color: var(--accent); margin-top: 2px; }
+    .contact-line span {
+      display: block;
+      color: var(--muted);
+      font-size: .9rem;
+      margin-bottom: 2px;
+    }
+    .contact-line strong {
+      display: block;
+      overflow-wrap: anywhere;
+      font-size: 1.06rem;
+      line-height: 1.45;
+    }
+    .contact-line a {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .site-footer {
+      padding: 28px 0;
+      color: rgba(255, 255, 255, .76);
+      background: #0d0d0d;
+      font-size: .96rem;
+    }
+    .footer-inner {
+      width: min(1120px, calc(100% - 32px));
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin: 0 auto;
+    }
+    .footer-inner a {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      color: white;
+      text-decoration: none;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity .55s ease, transform .55s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    @media (max-width: 980px) {
+      body { font-size: 17px; }
+      .nav { min-height: 74px; }
+      .menu-toggle { display: grid; }
+      .nav-links {
+        position: absolute;
+        left: 16px;
+        right: 16px;
+        top: 84px;
+        display: none;
+        padding: 12px;
+        background: white;
+        border: 1px solid rgba(17, 17, 17, .16);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+      }
+      .nav-links.open { display: grid; }
+      .nav-links a {
+        padding: 10px;
+        border-bottom: 0;
+      }
+      .hero,
+      .split,
+      .contact-panel {
+        grid-template-columns: 1fr;
+      }
+      .hero {
+        min-height: auto;
+        padding-top: 38px;
+      }
+      .hero-image {
+        height: min(70vw, 520px);
+        min-height: 360px;
+      }
+      .services-grid,
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 680px) {
+      .nav,
+      .hero,
+      .section-inner,
+      .footer-inner {
+        width: min(100% - 24px, 1120px);
+      }
+      .brand span span { display: none; }
+      .nav-actions .btn { display: none; }
+      h1 { font-size: clamp(2.28rem, 12vw, 3.4rem); }
+      .hero-actions,
+      .comfort-box,
+      .services-grid,
+      .steps,
+      .contact-actions {
+        grid-template-columns: 1fr;
+      }
+      .hero-actions .btn,
+      .contact-actions .btn {
+        width: 100%;
+      }
+      .hero-image,
+      .photo-pair img {
+        height: 330px;
+        min-height: 0;
+      }
+      .service-card,
+      .step,
+      .contact-copy,
+      .contact-card {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#leistungen">Zum Inhalt springen</a>
+  <header class="site-header">
+    <nav class="nav" aria-label="Hauptnavigation">
+      <a class="brand" href="#start" aria-label="Fahrdienst SSE Startseite">
+        <span class="brand-mark">SSE</span>
+        <span>
+          <strong>Fahrdienst SSE</strong>
+          <span>Joachimsthal & Umgebung</span>
+        </span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="#leistungen">Leistungen</a>
+        <a href="#ablauf">Ablauf</a>
+        <a href="#sicherheit">Sicherheit</a>
+        <a href="#kontakt">Kontakt</a>
+      </div>
+      <div class="nav-actions">
+        <a class="icon-btn" href="tel:+491732476695" aria-label="0173 2476695 anrufen">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.2 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.32 1.77.59 2.61a2 2 0 0 1-.45 2.11L8 9.7a16 16 0 0 0 6.3 6.3l1.26-1.25a2 2 0 0 1 2.11-.45c.84.27 1.72.47 2.61.59A2 2 0 0 1 22 16.92Z"/></svg>
+        </a>
+        <a class="btn" href="tel:+491732476695">Jetzt anrufen</a>
+        <button class="menu-toggle" id="menuToggle" type="button" aria-label="Menü öffnen" aria-controls="navLinks" aria-expanded="false">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main id="start">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Fahrdienst und Krankenfahrten</p>
+        <h1>Sicher zum Termin und wieder nach Hause.</h1>
+        <p class="lead">Fahrdienst SSE bringt Seniorinnen, Senioren und Menschen mit Unterstützungsbedarf zuverlässig zu Arzt, Klinik, Dialyse, Therapie, Bahnhof, Flughafen oder privaten Terminen.</p>
+        <div class="hero-actions" aria-label="Wichtige Kontaktaktionen">
+          <a class="btn" href="tel:+491732476695">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.2 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.32 1.77.59 2.61a2 2 0 0 1-.45 2.11L8 9.7a16 16 0 0 0 6.3 6.3l1.26-1.25a2 2 0 0 1 2.11-.45c.84.27 1.72.47 2.61.59A2 2 0 0 1 22 16.92Z"/></svg>
+            0173 2476695 anrufen
+          </a>
+          <a class="btn secondary" href="mailto:andreas-ehling@t-online.de?subject=R%C3%BCckruf%20zum%20Fahrdienst">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v16H4z"/><path d="m22 6-10 7L2 6"/></svg>
+            Rückruf anfragen
+          </a>
+        </div>
+        <div class="callout">
+          <strong>Persönlich erreichbar: Andreas Ehling</strong>
+          <p>Bitte nennen Sie beim Anruf Datum, Uhrzeit, Abholadresse, Ziel und ob Rollstuhl, Tragestuhl oder Liegendtransport benötigt wird.</p>
+        </div>
+      </div>
+      <div class="hero-media">
+        <img class="hero-image" src="assets/fahrdienst.jpg" alt="Fahrdienst SSE Fahrzeug für Krankenfahrten und sichere Personenbeförderung">
+        <div class="comfort-box" aria-label="Kurze Vorteile">
+          <div class="comfort-item"><strong>Ruhige Begleitung</strong><span>Hilfe beim Ein- und Aussteigen nach Absprache.</span></div>
+          <div class="comfort-item"><strong>Klare Absprache</strong><span>Termin, Abholung und Rückfahrt werden verständlich geklärt.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="leistungen" class="reveal">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">Wobei SSE fährt</p>
+          <h2>Einfach verständliche Fahrdienste für Alltag und Gesundheit.</h2>
+          <p>Die Seite konzentriert sich jetzt vollständig auf Fahrdienst und Krankentransport. Keine ablenkenden Nebengewerke, keine langen Textblöcke.</p>
+        </div>
+        <div class="services-grid">
+          <article class="service-card">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h18"/><path d="M5 12V8a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v4"/><path d="M6 17h.01M18 17h.01"/><path d="M5 12v5h14v-5"/></svg>
+            <h3>Krankenfahrten</h3>
+            <p>Fahrten zu Arzt, Krankenhaus, Dialyse, Strahlentherapie und weiteren medizinischen Terminen.</p>
+          </article>
+          <article class="service-card">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="18" r="3"/><path d="M11 18h7a2 2 0 0 0 2-2v-5h-5l-3-5H8v9"/><path d="M16 18a3 3 0 1 0 0-6"/></svg>
+            <h3>Rollstuhl, Tragestuhl, Liegendtransport</h3>
+            <p>Passende Beförderung für Menschen, die unterwegs Unterstützung oder eine besondere Transportform benötigen.</p>
+          </article>
+          <article class="service-card">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-4.4 7-11a7 7 0 1 0-14 0c0 6.6 7 11 7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+            <h3>Private Fahrten</h3>
+            <p>Fahrten zu Familienfeiern, Veranstaltungen, Bahnhof, Flughafen oder Ausflügen nach vorheriger Vereinbarung.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="ablauf" class="plain-band reveal">
+      <div class="section-inner">
+        <div class="section-heading">
+          <p class="eyebrow">So einfach geht es</p>
+          <h2>Vier klare Schritte bis zur Fahrt.</h2>
+          <p>Der Ablauf ist bewusst groß, ruhig und linear dargestellt, damit ältere Besucher sofort wissen, was als Nächstes zu tun ist.</p>
+        </div>
+        <div class="steps">
+          <div class="step">
+            <span>1</span>
+            <h3>Anrufen</h3>
+            <p>Telefonisch unter 0173 / 2476695 melden.</p>
+          </div>
+          <div class="step">
+            <span>2</span>
+            <h3>Termin nennen</h3>
+            <p>Datum, Uhrzeit, Abholort und Ziel durchgeben.</p>
+          </div>
+          <div class="step">
+            <span>3</span>
+            <h3>Hilfebedarf klären</h3>
+            <p>Rollstuhl, Tragestuhl, Liegendtransport oder Begleitung besprechen.</p>
+          </div>
+          <div class="step">
+            <span>4</span>
+            <h3>Sicher fahren</h3>
+            <p>Pünktlich abgeholt werden und zuverlässig zurückkommen.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sicherheit" class="reveal">
+      <div class="section-inner split">
+        <div>
+          <p class="eyebrow">Für Angehörige und Fahrgäste</p>
+          <h2>Übersichtlich, persönlich und ohne Formular-Hürde.</h2>
+          <p class="lead">Viele Anfragen entstehen, wenn ein Termin bald ansteht oder Angehörige schnell eine verlässliche Fahrt organisieren müssen. Darum setzt die Seite auf große Telefonflächen, gut lesbare Informationen und klare Vorbereitungshinweise.</p>
+          <div class="notice-list">
+            <div class="notice">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-5"/></svg>
+              <div><strong>Verlässliche Absprache</strong><p>Die Fahrt wird persönlich besprochen, statt in einem anonymen Online-Formular zu verschwinden.</p></div>
+            </div>
+            <div class="notice">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16"/><path d="M4 5h16"/><path d="M12 5v14"/><path d="m8 9-4 6h8z"/><path d="m20 9-4 6h8z"/></svg>
+              <div><strong>Hinweis zur Kostenübernahme</strong><p>Bei Krankenfahrten bitte vorab mit Arztpraxis oder Krankenkasse klären, welche Unterlagen benötigt werden.</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="photo-pair">
+          <img src="assets/transport-detail.jpg" alt="Innenbereich eines Fahrdienstfahrzeugs">
+          <img src="assets/fahrdienst.jpg" alt="Fahrdienst SSE Fahrzeug vor Ort">
+        </div>
+      </div>
+    </section>
+
+    <section id="kontakt" class="contact reveal">
+      <div class="section-inner contact-panel">
+        <div class="contact-copy">
+          <p class="eyebrow">Direkter Kontakt</p>
+          <h2>Fahrt jetzt telefonisch abstimmen.</h2>
+          <p>Am einfachsten ist ein kurzer Anruf. Für Angehörige oder geplante Termine ist auch eine E-Mail mit Rückrufwunsch möglich.</p>
+          <div class="contact-actions">
+            <a class="btn wide" href="tel:+491732476695">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.2 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.32 1.77.59 2.61a2 2 0 0 1-.45 2.11L8 9.7a16 16 0 0 0 6.3 6.3l1.26-1.25a2 2 0 0 1 2.11-.45c.84.27 1.72.47 2.61.59A2 2 0 0 1 22 16.92Z"/></svg>
+              0173 / 2476695
+            </a>
+            <a class="btn secondary wide" href="mailto:andreas-ehling@t-online.de?subject=R%C3%BCckruf%20zum%20Fahrdienst">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v16H4z"/><path d="m22 6-10 7L2 6"/></svg>
+              Rückruf per E-Mail
+            </a>
+          </div>
+        </div>
+        <address class="contact-card">
+          <div class="contact-line">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+            <div><span>Anschrift</span><strong>Fahrdienst SSE<br>Andreas Ehling<br>Mühlenstraße 58 - 59<br>16247 Joachimsthal</strong></div>
+          </div>
+          <div class="contact-line">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.2 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.32 1.77.59 2.61a2 2 0 0 1-.45 2.11L8 9.7a16 16 0 0 0 6.3 6.3l1.26-1.25a2 2 0 0 1 2.11-.45c.84.27 1.72.47 2.61.59A2 2 0 0 1 22 16.92Z"/></svg>
+            <div><span>Telefon</span><strong><a href="tel:+491732476695">0173 / 2476695</a><br><a href="tel:+4933361649161">033361 / 649161</a></strong></div>
+          </div>
+          <div class="contact-line">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v16H4z"/><path d="m22 6-10 7L2 6"/></svg>
+            <div><span>E-Mail</span><strong><a href="mailto:andreas-ehling@t-online.de">andreas-ehling@t-online.de</a></strong></div>
+          </div>
+        </address>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>© Fahrdienst SSE, Inh. Andreas Ehling</span>
+      <span><a href="https://sse-transporte.de/">Originalseite</a> · Voransicht für Kundenpräsentation</span>
+    </div>
+  </footer>
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TaxiService",
+      "name": "Fahrdienst SSE",
+      "provider": {
+        "@type": "LocalBusiness",
+        "name": "Fahrdienst SSE",
+        "founder": "Andreas Ehling",
+        "telephone": ["+491732476695", "+4933361649161"],
+        "email": "andreas-ehling@t-online.de",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Mühlenstraße 58 - 59",
+          "postalCode": "16247",
+          "addressLocality": "Joachimsthal",
+          "addressCountry": "DE"
+        }
+      },
+      "areaServed": "Joachimsthal und Umgebung",
+      "description": "Fahrdienst, Krankenfahrten, Rollstuhltransport, Tragestuhltransport und Liegendtransport."
+    }
+  </script>
+  <script>
+    const menuToggle = document.querySelector("#menuToggle");
+    const navLinks = document.querySelector("#navLinks");
+    menuToggle?.addEventListener("click", () => {
+      const isOpen = navLinks.classList.toggle("open");
+      menuToggle.setAttribute("aria-expanded", String(isOpen));
+    });
+    navLinks?.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => {
+        navLinks.classList.remove("open");
+        menuToggle?.setAttribute("aria-expanded", "false");
+      });
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll(".reveal").forEach((element) => observer.observe(element));
+  </script>
+</body>
+</html>
