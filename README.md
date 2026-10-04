@@ -7,6 +7,7 @@ GitHub-Pages-Repository fuer statische Kundenvorschauen.
 - https://preview.minamito.de/heizungsbau-gronwald/
 - https://preview.minamito.de/sse-transporte/
 - https://preview.minamito.de/barnimer-rollladenbau/
+- https://preview.minamito.de/eee-roesler/ (Quelle: HelmutHochbein/website-eee-roesler, `npm run build:preview`)
 
 ## Branches
 
